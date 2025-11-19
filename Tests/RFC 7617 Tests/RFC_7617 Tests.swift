@@ -141,7 +141,7 @@ struct RFC_7617_Tests {
         #expect(challenge.realm == "test-realm")
     }
 
-    @Test("RFC_7617.Basic.Error localized descriptions")
+    @Test("RFC 7617.Basic.Error localized descriptions")
     func testBasicErrorDescriptions() {
         let usernameError = RFC_7617.Basic.Error.invalidUsername("test message")
         #expect(usernameError.localizedDescription == "Invalid username: test message")

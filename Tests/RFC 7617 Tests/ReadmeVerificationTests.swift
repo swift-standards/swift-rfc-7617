@@ -8,11 +8,11 @@
 import RFC_7617
 import Testing
 
-@Suite("README Verification")
-struct ReadmeVerificationTests {
+@Suite
+struct `README Verification` {
 
-    @Test("README Line 53-61: Create Basic authentication credentials")
-    func createBasicCredentials() throws {
+    @Test
+    func `README Line 53-61: Create Basic authentication credentials`() throws {
         let credentials = try RFC_7617.Basic(username: "user", password: "pass")
 
         let authHeader = credentials.authorizationHeaderValue()
@@ -22,16 +22,16 @@ struct ReadmeVerificationTests {
         #expect(encoded == "dXNlcjpwYXNz")
     }
 
-    @Test("README Line 67-71: Parse credentials from Authorization header")
-    func parseAuthorizationHeader() throws {
+    @Test
+    func `README Line 67-71: Parse credentials from Authorization header`() throws {
         let headerValue = "Basic dXNlcjpwYXNz"
         let credentials = try RFC_7617.Basic.parse(from: headerValue)
         #expect(credentials.username == "user")
         #expect(credentials.password == "pass")
     }
 
-    @Test("README Line 77-87: Create authentication challenges")
-    func createAuthenticationChallenges() throws {
+    @Test
+    func `README Line 77-87: Create authentication challenges`() throws {
         let challenge = try RFC_7617.Basic.Challenge(realm: "api")
 
         let wwwAuthHeader = challenge.wwwAuthenticateHeaderValue()
@@ -42,8 +42,8 @@ struct ReadmeVerificationTests {
         #expect(utf8Header == "Basic realm=\"api\", charset=\"UTF-8\"")
     }
 
-    @Test("README Line 93-97: Parse challenge from WWW-Authenticate header")
-    func parseWWWAuthenticateHeader() throws {
+    @Test
+    func `README Line 93-97: Parse challenge from WWW-Authenticate header`() throws {
         let headerValue = "Basic realm=\"api\", charset=\"UTF-8\""
         let challenge = try RFC_7617.Basic.Challenge.parse(from: headerValue)
         #expect(challenge.realm == "api")

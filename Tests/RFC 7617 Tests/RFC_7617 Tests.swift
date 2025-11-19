@@ -9,11 +9,11 @@ import Testing
 
 @testable import RFC_7617
 
-@Suite("RFC 7617 Tests")
-struct RFC_7617_Tests {
+@Suite
+struct `RFC 7617 Tests` {
 
-    @Test("Basic credentials creation and validation")
-    func testBasicCredentialsCreation() throws {
+    @Test
+    func `Basic credentials creation and validation`() throws {
         let basic = try RFC_7617.Basic(username: "user", password: "pass")
         #expect(basic.username == "user")
         #expect(basic.password == "pass")
@@ -24,8 +24,8 @@ struct RFC_7617_Tests {
         }
     }
 
-    @Test("Basic credentials encoding")
-    func testBasicCredentialsEncoding() throws {
+    @Test
+    func `Basic credentials encoding`() throws {
         let basic = try RFC_7617.Basic(username: "user", password: "pass")
         let encoded = basic.encoded()
         #expect(encoded == "dXNlcjpwYXNz")  // Base64 of "user:pass"
@@ -34,8 +34,8 @@ struct RFC_7617_Tests {
         #expect(headerValue == "Basic dXNlcjpwYXNz")
     }
 
-    @Test("Basic credentials parsing from Authorization header")
-    func testBasicCredentialsParsing() throws {
+    @Test
+    func `Basic credentials parsing from Authorization header`() throws {
         let headerValue = "Basic dXNlcjpwYXNz"  // "user:pass"
         let basic = try RFC_7617.Basic.parse(from: headerValue)
         #expect(basic.username == "user")
@@ -48,8 +48,8 @@ struct RFC_7617_Tests {
         #expect(basicWithSpaces.password == "pass")
     }
 
-    @Test("Basic credentials parsing error cases")
-    func testBasicCredentialsParsingErrors() {
+    @Test
+    func `Basic credentials parsing error cases`() {
         // Missing "Basic " prefix
         #expect(throws: RFC_7617.Basic.Error.self) {
             try RFC_7617.Basic.parse(from: "Bearer dXNlcjpwYXNz")
@@ -67,8 +67,8 @@ struct RFC_7617_Tests {
         }
     }
 
-    @Test("Basic credentials with UTF-8 characters")
-    func testBasicCredentialsUTF8() throws {
+    @Test
+    func `Basic credentials with UTF-8 characters`() throws {
         let basic = try RFC_7617.Basic(username: "user", password: "páss")
         let encoded = basic.encoded()
         let decoded = try RFC_7617.Basic.parse(from: "Basic \(encoded)")
@@ -76,8 +76,8 @@ struct RFC_7617_Tests {
         #expect(decoded.password == "páss")
     }
 
-    @Test("Basic.Challenge creation and validation")
-    func testBasicChallengeCreation() throws {
+    @Test
+    func `Basic.Challenge creation and validation`() throws {
         let challenge = try RFC_7617.Basic.Challenge(realm: "test-realm")
         #expect(challenge.realm == "test-realm")
         #expect(challenge.charset == nil)
@@ -94,8 +94,8 @@ struct RFC_7617_Tests {
         }
     }
 
-    @Test("Basic.Challenge WWW-Authenticate header generation")
-    func testBasicChallengeHeaderGeneration() throws {
+    @Test
+    func `Basic.Challenge WWW-Authenticate header generation`() throws {
         let challenge = try RFC_7617.Basic.Challenge(realm: "test-realm")
         let headerValue = challenge.wwwAuthenticateHeaderValue()
         #expect(headerValue == "Basic realm=\"test-realm\"")
@@ -108,8 +108,8 @@ struct RFC_7617_Tests {
         #expect(headerValueWithCharset == "Basic realm=\"test-realm\", charset=\"UTF-8\"")
     }
 
-    @Test("Basic.Challenge parsing from WWW-Authenticate header")
-    func testBasicChallengeParsing() throws {
+    @Test
+    func `Basic.Challenge parsing from WWW-Authenticate header`() throws {
         let headerValue = "Basic realm=\"test-realm\""
         let challenge = try RFC_7617.Basic.Challenge.parse(from: headerValue)
         #expect(challenge.realm == "test-realm")
@@ -121,8 +121,8 @@ struct RFC_7617_Tests {
         #expect(challengeWithCharset.charset == "UTF-8")
     }
 
-    @Test("Basic.Challenge parsing error cases")
-    func testBasicChallengeParsingErrors() {
+    @Test
+    func `Basic.Challenge parsing error cases`() {
         // Missing "Basic " prefix
         #expect(throws: RFC_7617.Basic.Error.self) {
             try RFC_7617.Basic.Challenge.parse(from: "Digest realm=\"test\"")
@@ -134,15 +134,15 @@ struct RFC_7617_Tests {
         }
     }
 
-    @Test("Basic.Challenge parsing with unquoted values")
-    func testBasicChallengeParsingUnquoted() throws {
+    @Test
+    func `Basic.Challenge parsing with unquoted values`() throws {
         let headerValue = "Basic realm=test-realm"
         let challenge = try RFC_7617.Basic.Challenge.parse(from: headerValue)
         #expect(challenge.realm == "test-realm")
     }
 
-    @Test("RFC 7617.Basic.Error localized descriptions")
-    func testBasicErrorDescriptions() {
+    @Test
+    func `RFC 7617.Basic.Error localized descriptions`() {
         let usernameError = RFC_7617.Basic.Error.invalidUsername("test message")
         #expect(usernameError.localizedDescription == "Invalid username: test message")
 
@@ -156,8 +156,8 @@ struct RFC_7617_Tests {
         #expect(charsetError.localizedDescription == "Invalid charset: test message")
     }
 
-    @Test("Edge case: empty username or password")
-    func testEmptyCredentials() throws {
+    @Test
+    func `Edge case: empty username or password`() throws {
         let basicEmptyUsername = try RFC_7617.Basic(username: "", password: "pass")
         #expect(basicEmptyUsername.username.isEmpty)
         #expect(basicEmptyUsername.password == "pass")
@@ -173,8 +173,8 @@ struct RFC_7617_Tests {
         #expect(decoded.password == "pass")
     }
 
-    @Test("Edge case: password with colon")
-    func testPasswordWithColon() throws {
+    @Test
+    func `Edge case: password with colon`() throws {
         let basic = try RFC_7617.Basic(username: "user", password: "pass:word")
         #expect(basic.username == "user")
         #expect(basic.password == "pass:word")

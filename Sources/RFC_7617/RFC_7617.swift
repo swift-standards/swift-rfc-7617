@@ -5,7 +5,6 @@
 //  Created by Generated on 2025-07-27.
 //
 
-import Foundation
 
 /// Implementation of RFC 7617: The 'Basic' HTTP Authentication Scheme
 ///

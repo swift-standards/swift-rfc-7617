@@ -1,51 +1,55 @@
+// ===----------------------------------------------------------------------===//
 //
-//  ReadmeVerificationTests.swift
-//  swift-rfc-7617
+// This source file is part of the swift-rfc-7617 open source project
 //
-//  Verifies that README code examples actually work
+// Copyright (c) 2025 Coen ten Thije Boonkkamp
+// Licensed under Apache License v2.0
 //
+// See LICENSE.txt for license information
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+// ===----------------------------------------------------------------------===//
 
 import RFC_7617
 import Testing
 
-@Suite
-struct `README Verification` {
+@Suite("README Verification")
+struct ReadmeVerificationTests {
 
-    @Test
-    func `README Line 53-61: Create Basic authentication credentials`() throws {
-        let credentials = try RFC_7617.Basic(username: "user", password: "pass")
+    @Test("Create Basic authentication credentials")
+    func createBasicCredentials() throws {
+        let credentials = try RFC_7617.Basic(userID: "user", password: "pass")
 
-        let authHeader = credentials.authorizationHeaderValue()
+        // Serialize to Authorization header
+        let authHeader = String(credentials)
         #expect(authHeader == "Basic dXNlcjpwYXNz")
-
-        let encoded = credentials.encoded()
-        #expect(encoded == "dXNlcjpwYXNz")
     }
 
-    @Test
-    func `README Line 67-71: Parse credentials from Authorization header`() throws {
+    @Test("Parse credentials from Authorization header")
+    func parseCredentials() throws {
         let headerValue = "Basic dXNlcjpwYXNz"
-        let credentials = try RFC_7617.Basic.parse(from: headerValue)
-        #expect(credentials.username == "user")
+        let credentials = try RFC_7617.Basic(ascii: headerValue.utf8)
+        #expect(credentials.userID == "user")
         #expect(credentials.password == "pass")
     }
 
-    @Test
-    func `README Line 77-87: Create authentication challenges`() throws {
+    @Test("Create authentication challenges")
+    func createChallenge() throws {
         let challenge = try RFC_7617.Basic.Challenge(realm: "api")
 
-        let wwwAuthHeader = challenge.wwwAuthenticateHeaderValue()
+        let wwwAuthHeader = String(challenge)
         #expect(wwwAuthHeader == "Basic realm=\"api\"")
 
         let utf8Challenge = try RFC_7617.Basic.Challenge(realm: "api", charset: "UTF-8")
-        let utf8Header = utf8Challenge.wwwAuthenticateHeaderValue()
+        let utf8Header = String(utf8Challenge)
         #expect(utf8Header == "Basic realm=\"api\", charset=\"UTF-8\"")
     }
 
-    @Test
-    func `README Line 93-97: Parse challenge from WWW-Authenticate header`() throws {
+    @Test("Parse challenge from WWW-Authenticate header")
+    func parseChallenge() throws {
         let headerValue = "Basic realm=\"api\", charset=\"UTF-8\""
-        let challenge = try RFC_7617.Basic.Challenge.parse(from: headerValue)
+        let challenge = try RFC_7617.Basic.Challenge(ascii: headerValue.utf8)
         #expect(challenge.realm == "api")
         #expect(challenge.charset == "UTF-8")
     }

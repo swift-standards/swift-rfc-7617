@@ -71,32 +71,32 @@ extension RFC_7617.Basic {
     }
 }
 
-// MARK: - UInt8.ASCII.Serializable
+// MARK: - Binary.ASCII.Serializable
 
-extension RFC_7617.Basic.Challenge: UInt8.ASCII.Serializable {
+extension RFC_7617.Basic.Challenge: Binary.ASCII.Serializable {
     public static func serialize<Buffer>(
         ascii challenge: RFC_7617.Basic.Challenge,
         into buffer: inout Buffer
     ) where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
         // "Basic realm=\""
-        buffer.append(contentsOf: [0x42, 0x61, 0x73, 0x69, 0x63, 0x20]) // "Basic "
-        buffer.append(contentsOf: [0x72, 0x65, 0x61, 0x6C, 0x6D, 0x3D, 0x22]) // "realm=\""
+        buffer.append(contentsOf: "Basic realm=".utf8)
+        buffer.append(UInt8.ascii.quotationMark)
 
         // Escape realm value and append
         for byte in challenge.realm.utf8 {
-            if byte == 0x22 || byte == 0x5C { // " or \
-                buffer.append(0x5C) // backslash escape
+            if byte == UInt8.ascii.quotationMark || byte == UInt8.ascii.reverseSolidus {
+                buffer.append(UInt8.ascii.reverseSolidus)
             }
             buffer.append(byte)
         }
-        buffer.append(0x22) // closing quote
+        buffer.append(UInt8.ascii.quotationMark)
 
         // Optional charset parameter
         if let charset = challenge.charset {
-            buffer.append(contentsOf: [0x2C, 0x20]) // ", "
-            buffer.append(contentsOf: [0x63, 0x68, 0x61, 0x72, 0x73, 0x65, 0x74, 0x3D, 0x22]) // "charset=\""
+            buffer.append(contentsOf: ", charset=".utf8)
+            buffer.append(UInt8.ascii.quotationMark)
             buffer.append(contentsOf: charset.utf8)
-            buffer.append(0x22) // closing quote
+            buffer.append(UInt8.ascii.quotationMark)
         }
     }
 
@@ -194,7 +194,7 @@ extension RFC_7617.Basic.Challenge: UInt8.ASCII.Serializable {
 
 // MARK: - Protocol Conformances
 
-extension RFC_7617.Basic.Challenge: UInt8.ASCII.RawRepresentable {
+extension RFC_7617.Basic.Challenge: Binary.ASCII.RawRepresentable {
     public typealias RawValue = String
 }
 

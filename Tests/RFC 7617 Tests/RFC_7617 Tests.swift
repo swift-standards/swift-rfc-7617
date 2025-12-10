@@ -116,14 +116,14 @@ struct RFC_7617_Tests {
     func challengeHeaderGeneration() throws {
         let challenge = try RFC_7617.Basic.Challenge(realm: "test-realm")
         let headerValue = String(challenge)
-        #expect(headerValue == "Basic realm=\"test-realm\"")
+        #expect(headerValue == #"Basic realm="test-realm""#)
 
         let challengeWithCharset = try RFC_7617.Basic.Challenge(
             realm: "test-realm",
             charset: "UTF-8"
         )
         let headerValueWithCharset = String(challengeWithCharset)
-        #expect(headerValueWithCharset == "Basic realm=\"test-realm\", charset=\"UTF-8\"")
+        #expect(headerValueWithCharset == #"Basic realm="test-realm", charset="UTF-8""#)
     }
 
     @Test("Basic.Challenge parsing from WWW-Authenticate header")
@@ -133,7 +133,7 @@ struct RFC_7617_Tests {
         #expect(challenge.realm == "test-realm")
         #expect(challenge.charset == nil)
 
-        let headerValueWithCharset = "Basic realm=\"test-realm\", charset=\"UTF-8\""
+        let headerValueWithCharset = #"Basic realm=test-realm, charset=UTF-8"#
         let challengeWithCharset = try RFC_7617.Basic.Challenge(ascii: headerValueWithCharset.utf8)
         #expect(challengeWithCharset.realm == "test-realm")
         #expect(challengeWithCharset.charset == "UTF-8")

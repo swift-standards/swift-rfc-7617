@@ -39,11 +39,11 @@ struct ReadmeVerificationTests {
         let challenge = try RFC_7617.Basic.Challenge(realm: "api")
 
         let wwwAuthHeader = String(challenge)
-        #expect(wwwAuthHeader == "Basic realm=\"api\"")
+        #expect(wwwAuthHeader == #"Basic realm="api""#)
 
         let utf8Challenge = try RFC_7617.Basic.Challenge(realm: "api", charset: "UTF-8")
         let utf8Header = String(utf8Challenge)
-        #expect(utf8Header == "Basic realm=\"api\", charset=\"UTF-8\"")
+        #expect(utf8Header == #"Basic realm="api", charset="UTF-8""#)
     }
 
     @Test("Parse challenge from WWW-Authenticate header")

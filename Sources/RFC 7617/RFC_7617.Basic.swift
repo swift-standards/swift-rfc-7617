@@ -84,16 +84,16 @@ extension [UInt8] {
     static let basicLower: Self = [.ascii.b, .ascii.a, .ascii.s, .ascii.i, .ascii.c]
 }
 
-// MARK: - UInt8.ASCII.Serializable
+// MARK: - Binary.ASCII.Serializable
 
-extension RFC_7617.Basic: UInt8.ASCII.Serializable {
+extension RFC_7617.Basic: Binary.ASCII.Serializable {
     public static func serialize<Buffer>(
         ascii credentials: RFC_7617.Basic,
         into buffer: inout Buffer
     ) where Buffer: RangeReplaceableCollection, Buffer.Element == UInt8 {
         // "Basic "
-        buffer.append(contentsOf: [UInt8].basic) // "Basic "
-        buffer.append(.ascii.space) // "Basic "
+        buffer.append(contentsOf: [UInt8].basic)  // "Basic "
+        buffer.append(.ascii.space)  // "Basic "
 
         // Base64 encode user-id:password (RFC 4648)
         let userPass = "\(credentials.userID):\(credentials.password)"
@@ -140,11 +140,11 @@ extension RFC_7617.Basic: UInt8.ASCII.Serializable {
 
         // Check "Basic " prefix case-insensitively (inline comparison, no arrays)
         guard let b0 = iterator.next(), b0.ascii.lowercased() == .ascii.b,
-              let b1 = iterator.next(), b1.ascii.lowercased() == .ascii.a,
-              let b2 = iterator.next(), b2.ascii.lowercased() == .ascii.s,
-              let b3 = iterator.next(), b3.ascii.lowercased() == .ascii.i,
-              let b4 = iterator.next(), b4.ascii.lowercased() == .ascii.c,
-              let b5 = iterator.next(), b5 == .ascii.space
+            let b1 = iterator.next(), b1.ascii.lowercased() == .ascii.a,
+            let b2 = iterator.next(), b2.ascii.lowercased() == .ascii.s,
+            let b3 = iterator.next(), b3.ascii.lowercased() == .ascii.i,
+            let b4 = iterator.next(), b4.ascii.lowercased() == .ascii.c,
+            let b5 = iterator.next(), b5 == .ascii.space
         else {
             throw Error.invalidFormat(
                 String(decoding: bytes, as: UTF8.self),
@@ -188,7 +188,7 @@ extension RFC_7617.Basic: UInt8.ASCII.Serializable {
 
 // MARK: - Protocol Conformances
 
-extension RFC_7617.Basic: UInt8.ASCII.RawRepresentable {
+extension RFC_7617.Basic: Binary.ASCII.RawRepresentable {
     public typealias RawValue = String
 }
 

@@ -134,7 +134,7 @@ extension RFC_7617.Basic.Challenge: Binary.ASCII.Serializable {
 
         let prefixBytes = Array(byteArray.prefix(5))
         let prefixLower = prefixBytes.map { $0.ascii.lowercased() }
-        let basicLower: [UInt8] = [0x62, 0x61, 0x73, 0x69, 0x63] // "basic"
+        let basicLower: [UInt8] = [0x62, 0x61, 0x73, 0x69, 0x63]  // "basic"
         guard prefixLower == basicLower && byteArray[5] == 0x20 else {
             throw RFC_7617.Basic.Error.invalidFormat(
                 String(decoding: byteArray, as: UTF8.self),
@@ -175,7 +175,7 @@ extension RFC_7617.Basic.Challenge: Binary.ASCII.Serializable {
                 case "charset":
                     charset = value
                 default:
-                    break // ignore unknown parameters
+                    break  // ignore unknown parameters
                 }
             }
         }

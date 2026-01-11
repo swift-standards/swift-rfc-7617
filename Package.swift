@@ -23,6 +23,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../swift-incits-4-1986"),
+        .package(path: "../../swift-primitives/swift-binary-primitives"),
         .package(path: "../swift-rfc-4648"),
     ],
     targets: [
@@ -30,6 +31,7 @@ let package = Package(
             name: .rfc7617,
             dependencies: [
                 .product(name: "INCITS 4 1986", package: "swift-incits-4-1986"),
+                .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "RFC 4648", package: "swift-rfc-4648"),
             ]
         ),

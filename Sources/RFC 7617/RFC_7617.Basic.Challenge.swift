@@ -11,7 +11,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import INCITS_4_1986
+public import ASCII
 
 extension RFC_7617.Basic {
     /// A Basic authentication challenge for WWW-Authenticate header

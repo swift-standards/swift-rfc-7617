@@ -22,7 +22,7 @@ let package = Package(
         .library(name: .rfc7617, targets: [.rfc7617]),
     ],
     dependencies: [
-        .package(path: "../swift-incits-4-1986"),
+        .package(path: "../../swift-foundations/swift-ascii"),
         .package(path: "../../swift-primitives/swift-binary-primitives"),
         .package(path: "../swift-rfc-4648"),
     ],
@@ -30,7 +30,7 @@ let package = Package(
         .target(
             name: .rfc7617,
             dependencies: [
-                .product(name: "INCITS 4 1986", package: "swift-incits-4-1986"),
+                .product(name: "ASCII", package: "swift-ascii"),
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "RFC 4648", package: "swift-rfc-4648"),
             ]

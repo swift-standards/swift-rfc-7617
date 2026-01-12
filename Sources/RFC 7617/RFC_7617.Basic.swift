@@ -11,7 +11,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import INCITS_4_1986
+public import ASCII
 internal import RFC_4648
 
 extension RFC_7617 {

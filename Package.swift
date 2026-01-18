@@ -22,9 +22,9 @@ let package = Package(
         .library(name: .rfc7617, targets: [.rfc7617]),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-foundations/swift-ascii.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-primitives/swift-binary-primitives.git", from: "0.0.1"),
-        .package(url: "https://github.com/swift-standards/swift-rfc-4648.git", from: "0.0.1"),
+        .package(path: "../../swift-foundations/swift-ascii"),
+        .package(path: "../../swift-primitives/swift-binary-primitives"),
+        .package(path: "../swift-rfc-4648"),
     ],
     targets: [
         .target(

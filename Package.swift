@@ -34,7 +34,13 @@ let package = Package(
                 .product(name: "Binary Primitives", package: "swift-binary-primitives"),
                 .product(name: "RFC 4648", package: "swift-rfc-4648")
             ]
-        )
+        ),
+        .testTarget(
+            name: "RFC 7617 Tests",
+            dependencies: [
+                "RFC 7617",
+            ]
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
@@ -50,6 +56,7 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableExperimentalFeature("Lifetimes"),
         .enableExperimentalFeature("SuppressedAssociatedTypes"),
         .enableExperimentalFeature("SuppressedAssociatedTypesWithDefaults"),

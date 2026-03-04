@@ -142,43 +142,52 @@ extension RFC_7617.Basic.Challenge: Binary.ASCII.Serializable {
             )
         }
 
-        // Parse parameters after "Basic "
-        let parameters = String(decoding: byteArray.dropFirst(6), as: UTF8.self)
+        // Parse parameters after "Basic " at byte level
+        let paramBytes = Array(byteArray.dropFirst(6))
 
         var realm: String?
         var charset: String?
 
-        // Simple parameter parsing: split on comma, then parse key=value
-        let components = parameters.split(separator: ",", omittingEmptySubsequences: true)
-        for component in components {
-            // Trim whitespace manually
-            var trimmed = String(component)
-            while trimmed.hasPrefix(" ") || trimmed.hasPrefix("\t") {
-                trimmed.removeFirst()
+        // Split on comma, then parse key=value
+        var start = 0
+        func parseParam(_ lo: Int, _ hi: Int) {
+            // Trim OWS
+            var a = lo, b = hi
+            while a < b && (paramBytes[a] == 0x20 || paramBytes[a] == 0x09) { a &+= 1 }
+            while b > a && (paramBytes[b &- 1] == 0x20 || paramBytes[b &- 1] == 0x09) { b &-= 1 }
+            guard a < b else { return }
+
+            // Find '='
+            var eqIdx: Int? = nil
+            for j in a..<b where paramBytes[j] == 0x3D {
+                eqIdx = j
+                break
             }
-            while trimmed.hasSuffix(" ") || trimmed.hasSuffix("\t") {
-                trimmed.removeLast()
+            guard let eq = eqIdx else { return }
+
+            let key = String(decoding: paramBytes[a..<eq], as: UTF8.self).lowercased()
+
+            // Value — strip quotes if present
+            var vlo = eq &+ 1, vhi = b
+            if vhi > vlo && paramBytes[vlo] == 0x22 && paramBytes[vhi &- 1] == 0x22 {
+                vlo &+= 1; vhi &-= 1
             }
+            let value = String(decoding: paramBytes[vlo..<vhi], as: UTF8.self)
 
-            if let equalsIndex = trimmed.firstIndex(of: "=") {
-                let key = String(trimmed[..<equalsIndex]).lowercased()
-                var value = String(trimmed[trimmed.index(after: equalsIndex)...])
-
-                // Remove quotes if present
-                if value.hasPrefix("\"") && value.hasSuffix("\"") && value.count >= 2 {
-                    value = String(value.dropFirst().dropLast())
-                }
-
-                switch key {
-                case "realm":
-                    realm = value
-                case "charset":
-                    charset = value
-                default:
-                    break  // ignore unknown parameters
-                }
+            switch key {
+            case "realm": realm = value
+            case "charset": charset = value
+            default: break
             }
         }
+
+        for idx in 0..<paramBytes.count {
+            if paramBytes[idx] == 0x2C {  // ','
+                parseParam(start, idx)
+                start = idx &+ 1
+            }
+        }
+        parseParam(start, paramBytes.count)
 
         guard let realmValue = realm else {
             throw RFC_7617.Basic.Error.invalidFormat(
